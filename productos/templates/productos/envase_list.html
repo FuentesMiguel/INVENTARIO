@@ -1,0 +1,29 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}Lista de Envases{% endblock %}
+
+{% block content %}
+  <h2>Lista de Envases</h2>
+  <a href="{% url 'productos:envase_create' %}" class="btn btn-primary">Agregar Envase</a>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Peso</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for envase in productos %}
+        <tr>
+          <td>{{ envase.nombre }}</td>
+          <td>{{ envase.peso }} g</td>
+          <td>
+            <a href="{% url 'productos:envase_update' envase.pk %}" class="btn btn-warning">Editar</a>
+            <a href="{% url 'productos:envase_delete' envase.pk %}" class="btn btn-danger">Eliminar</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
