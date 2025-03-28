@@ -1,7 +1,7 @@
 from django.db import models
 
 class Envase(models.Model):
-    nombre = models.CharField(max_length=255)
+    nombre = models.CharField(max_length=255, unique=True)
     peso = models.FloatField()
 
     def __str__(self):

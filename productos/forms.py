@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django import forms
 from .models import Producto, Envase
 
@@ -20,3 +21,9 @@ class EnvaseForm(forms.ModelForm):
             'nombre': forms.TextInput(attrs={'class': 'form-control'}),
             'peso': forms.NumberInput(attrs={'class': 'form-control'}),
         }
+
+    def clean_nombre(self):
+        nombre = self.cleaned_data.get('nombre')
+        if Envase.objects.filter(nombre=nombre).exists():
+            raise ValidationError("¡Ya existe un envase con este nombre!")
+        return nombre
