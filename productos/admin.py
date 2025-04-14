@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Producto, Envase
+from .models import Product, Container
 
-admin.site.register(Producto)
-admin.site.register(Envase)
+admin.site.register(Product)
+admin.site.register(Container)
+

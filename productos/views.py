@@ -1,85 +1,109 @@
 from django.db import IntegrityError
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
+from django.http import JsonResponse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
-from .models import Producto, Envase
-from .forms import ProductoForm, EnvaseForm
+from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 
+from .models import Product, Container
+from .forms import ProductForm, ContainerForm
 
-# Vista para listar los productos
-class ProductoListView(ListView):
-    model = Producto
-    template_name = 'productos/producto_list.html'
-    context_object_name = 'productos'
+# View to list products
+class ProductListView(ListView):
+    model = Product
+    template_name = 'products/product_list.html'
+    context_object_name = 'products'
 
-# Vista para agregar un nuevo producto
-class ProductoCreateView(SuccessMessageMixin, CreateView):
-    model = Producto
-    form_class = ProductoForm
-    template_name = 'productos/producto_form.html'
-    success_url = reverse_lazy('productos:producto_list')
-    success_message = "Producto creado exitosamente"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Listado de Productos'
+        context['create_url'] = reverse('products:product_create')
+        return context
 
-# Vista para editar un producto existente
-class ProductoUpdateView(SuccessMessageMixin, UpdateView):
-    model = Producto
-    form_class = ProductoForm
-    template_name = 'productos/producto_form.html'
-    success_url = reverse_lazy('productos:producto_list')
-    success_message = "Producto actualizado exitosamente"
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
-# Vista para eliminar un producto
-class ProductoDeleteView(SuccessMessageMixin, DeleteView):
-    model = Producto
-    template_name = 'productos/producto_confirm_delete.html'
-    success_url = reverse_lazy('productos:producto_list')
-    success_message = "Producto eliminado exitosamente"
+    def post(self, request, *args, **kwargs):
+        try:
+            products = [product.to_json() for product in Product.objects.all()]
+            return JsonResponse({'data': products})
+        except Exception as e:
+            print("Error en vista ProductListView:", e)
+            return JsonResponse({'error': str(e)}, status=500)
 
-# Vista para listar los envases
-class EnvaseListView(SuccessMessageMixin, ListView):
-    model = Envase
-    template_name = 'productos/envase_list.html'
-    context_object_name = 'envases'
+# View to create a new product
+class ProductCreateView(SuccessMessageMixin, CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'products/product_form.html'
+    success_url = reverse_lazy('products:product_list')
+    success_message = "Product created successfully"
 
-# Vista para agregar un nuevo envase
-class EnvaseCreateView(CreateView):
-    model = Envase
-    form_class = EnvaseForm
-    template_name = 'productos/envase_form.html'
-    success_url = reverse_lazy('productos:envase_list')
-    success_message = "Envase creado exitosamente"
+
+# View to update an existing product
+class ProductUpdateView(SuccessMessageMixin, UpdateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'products/product_form.html'
+    success_url = reverse_lazy('products:product_list')
+    success_message = "Product updated successfully"
+
+
+# View to delete a product
+class ProductDeleteView(SuccessMessageMixin, DeleteView):
+    model = Product
+    template_name = 'products/product_confirm_delete.html'
+    success_url = reverse_lazy('products:product_list')
+    success_message = "Product deleted successfully"
+
+
+# View to list containers
+class ContainerListView(SuccessMessageMixin, ListView):
+    model = Container
+    template_name = 'products/container_list.html'
+    context_object_name = 'containers'
+
+
+# View to create a new container
+class ContainerCreateView(CreateView):
+    model = Container
+    form_class = ContainerForm
+    template_name = 'products/container_form.html'
+    success_url = reverse_lazy('products:container_list')
+    success_message = "Container created successfully"
 
     def form_valid(self, form):
         try:
-            # Guardar el objeto y asignar el atributo object de manera automática
             self.object = form.save()
             messages.success(self.request, self.success_message)
             return super().form_valid(form)
         except IntegrityError as e:
-            # Aquí puedes manejar un error genérico o si ocurre un error específico
-            messages.error(self.request, f"Hubo un error al guardar el envase: {str(e)}")
+            messages.error(self.request, f"An error occurred while saving the container: {str(e)}")
             return self.form_invalid(form)
 
     def form_invalid(self, form):
-        # Aquí puedes manejar errores de validación como los que hemos añadido en el formulario
-        messages.error(self.request, "Hubo un problema con el formulario. Por favor, verifique los campos.")
+        messages.error(self.request, "There was a problem with the form. Please check the fields.")
         return super().form_invalid(form)
 
-# Vista para editar un envase existente
-class EnvaseUpdateView(SuccessMessageMixin, UpdateView):
-    model = Envase
-    form_class = EnvaseForm
-    template_name = 'productos/envase_form.html'
-    success_url = reverse_lazy('productos:envase_list')
-    success_message = "Envase actualizado exitosamente"
 
-# Vista para eliminar un envase
-class EnvaseDeleteView(SuccessMessageMixin, DeleteView):
-    model = Envase
-    template_name = 'productos/envase_confirm_delete.html'
-    success_url = reverse_lazy('productos:envase_list')
-    success_message = "Envase eliminado exitosamente"
+# View to update an existing container
+class ContainerUpdateView(SuccessMessageMixin, UpdateView):
+    model = Container
+    form_class = ContainerForm
+    template_name = 'products/container_form.html'
+    success_url = reverse_lazy('products:container_list')
+    success_message = "Container updated successfully"
+
+
+# View to delete a container
+class ContainerDeleteView(SuccessMessageMixin, DeleteView):
+    model = Container
+    template_name = 'products/container_confirm_delete.html'
+    success_url = reverse_lazy('products:container_list')
+    success_message = "Container deleted successfully"

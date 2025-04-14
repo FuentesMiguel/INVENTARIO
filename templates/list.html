@@ -1,0 +1,39 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+{% block title %}Listado{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+    <h2>{{ title|default:"Listado" }}</h2>
+    {% if create_url %}
+        <a href="{{ create_url }}" class="btn btn-success">Agregar</a>
+    {% endif %}
+</div>
+
+<table id="dataTable" class="table table-striped table-bordered" style="width:100%">
+    <thead>
+        <tr>
+            {% block table_headers %}{% endblock %}
+        </tr>
+    </thead>
+    <tbody>
+        {% block table_body %}{% endblock %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable({
+            responsive: true,
+            autoWidth: false,
+            language: {
+                url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+            }
+        });
+    });
+</script>
+{% endblock %}

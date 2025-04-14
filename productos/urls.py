@@ -1,16 +1,16 @@
 from django.urls import path
 from . import views
 
-app_name = 'productos'
+app_name = 'products'
 
 urlpatterns = [
-    path('productos/', views.ProductoListView.as_view(), name='producto_list'),
-    path('producto/nuevo/', views.ProductoCreateView.as_view(), name='producto_create'),
-    path('producto/<int:pk>/editar/', views.ProductoUpdateView.as_view(), name='producto_update'),
-    path('producto/<int:pk>/eliminar/', views.ProductoDeleteView.as_view(), name='producto_delete'),
+    path('product/', views.ProductListView.as_view(), name='product_list'),
+    path('product/new/', views.ProductCreateView.as_view(), name='product_create'),
+    path('product/<int:pk>/edit/', views.ProductUpdateView.as_view(), name='product_update'),
+    path('product/<int:pk>/delete/', views.ProductDeleteView.as_view(), name='product_delete'),
 
-    path('envases/', views.EnvaseListView.as_view(), name='envase_list'),
-    path('envase/nuevo/', views.EnvaseCreateView.as_view(), name='envase_create'),
-    path('envase/<int:pk>/editar/', views.EnvaseUpdateView.as_view(), name='envase_update'),
-    path('envase/<int:pk>/eliminar/', views.EnvaseDeleteView.as_view(), name='envase_delete'),
+    path('containers/', views.ContainerListView.as_view(), name='container_list'),
+    path('container/new/', views.ContainerCreateView.as_view(), name='container_create'),
+    path('container/<int:pk>/edit/', views.ContainerUpdateView.as_view(), name='container_update'),
+    path('container/<int:pk>/delete/', views.ContainerDeleteView.as_view(), name='container_delete'),
 ]

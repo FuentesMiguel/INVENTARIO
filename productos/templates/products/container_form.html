@@ -1,11 +1,11 @@
 {% extends 'base_generic.html' %}
 
-{% block title %}Formulario de Envase{% endblock %}
+{% block title %}Container Form{% endblock %}
 
 {% block content %}
-  <h2>{% if form.instance.pk %}Editar{% else %}Nuevo{% endif %} Envase</h2>
+  <h2>{% if form.instance.pk %}Edit{% else %}New{% endif %} Container</h2>
 
-  <!-- Mostrar mensajes globales (de tipo error o éxito) -->
+  <!-- Global messages block (success or error) -->
   <!--
   {% if messages %}
     <div class="alert-container">
@@ -24,7 +24,7 @@
   <form method="post">
     {% csrf_token %}
     
-    <!-- Mostrar los campos manualmente con sus errores -->
+    <!-- Render fields manually with validation errors -->
     {% for field in form %}
       <div class="form-group">
         <label for="{{ field.id_for_label }}">{{ field.label }}</label>
@@ -39,7 +39,7 @@
       </div>
     {% endfor %}
   
-    <button type="submit" class="btn btn-primary">Guardar</button>
+    <button type="submit" class="btn btn-primary">Save</button>
   </form>
 
 {% endblock %}

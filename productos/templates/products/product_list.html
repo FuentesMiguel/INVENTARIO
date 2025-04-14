@@ -1,0 +1,76 @@
+{% extends 'list.html' %}
+{% load static %}
+
+{% block title %}Product List{% endblock %}
+
+{% block table_headers %}
+    <th>Nombre</th>
+    <th>Envase</th>
+    <th>Cantidad</th>
+    <th>Peso Total Medido</th>
+    <th>Peso Neto (sin envase)</th>
+    <th>Acciones</th>
+{% endblock %}
+
+{% block table_body %}
+<!-- El cuerpo se llenará vía AJAX -->
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable({
+            processing: true,
+            serverSide: false,  // Usa true si implementas paginación en servidor
+            ajax: {
+                url: "{% url 'products:product_list' %}",
+                type: "POST",
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                dataSrc: "data",
+                error: function(xhr, error, thrown) {
+                    console.log("Error en AJAX: ", xhr.responseText);
+                }
+            },
+            columns: [
+                { data: "name" },
+                { data: "container" },
+                { data: "quantity" },
+                { data: "net_weight", render: function(data) {
+                    return data + " g";
+                }},
+                { data: "total_weight", render: function(data) {
+                    return parseFloat(data).toFixed(2) + " g";
+                }},
+                { data: "id", render: function(data, type, row) {
+                    const edit_url = "{% url 'products:product_update' '0' %}".replace('0', data);
+                    const delete_url = "{% url 'products:product_delete' '0' %}".replace('0', data);
+                    return `
+                        <a href="${edit_url}" class="btn btn-warning btn-sm">Editar</a>
+                        <a href="${delete_url}" class="btn btn-danger btn-sm">Eliminar</a>
+                    `;
+                }, orderable: false, searchable: false }
+            ],
+            language: {
+                url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+            }
+        });
+    });
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+{% endblock %}
