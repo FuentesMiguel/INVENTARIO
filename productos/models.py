@@ -1,15 +1,29 @@
 from django.db import models
+from django.db import models
+from django.core.serializers import serialize
+
 
 class Container(models.Model):
     name = models.CharField(max_length=255, unique=True)
     weight = models.FloatField()
+    created_at = models.DateTimeField(auto_now_add=True)  # Para saber cuándo fue creado
 
     def __str__(self):
         return f"{self.name} ({self.weight} g)"
 
+    def to_json(self):
+        """
+        Método para serializar el container a JSON de forma personalizada.
+        """
+        return {
+            'id': self.id,
+            'name': self.name,
+            'weight': self.weight,
+            'created_at': self.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+        }
 
-from django.db import models
-from django.core.serializers import serialize
+    class Meta:
+        ordering = ['-created_at']  # Ordena por fecha de creación, más reciente primero
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
@@ -44,7 +58,7 @@ class Product(models.Model):
         }
 
     class Meta:
-        ordering = ['name']
+        ordering = ['-id']
 
 
 

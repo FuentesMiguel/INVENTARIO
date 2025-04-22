@@ -10,19 +10,19 @@ from django.utils.decorators import method_decorator
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 
-from .models import Product, Container
-from .forms import ProductForm, ContainerForm
+from ..models import Product, Container
+from ..forms import ProductForm, ContainerForm
 
-# View to list products
-class ProductListView(ListView):
-    model = Product
-    template_name = 'products/product_list.html'
-    context_object_name = 'products'
+# View to list containers
+class ContainerListView(SuccessMessageMixin, ListView):
+    model = Container
+    template_name = 'containers/container_list.html'
+    context_object_name = 'containers'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Listado de Productos'
-        context['create_url'] = reverse('products:product_create')
+        context['title'] = 'Listado de Envases'
+        context['create_url'] = reverse('products:container_create')  # Asegúrate de tener esta URL
         return context
 
     @method_decorator(csrf_exempt)
@@ -31,50 +31,17 @@ class ProductListView(ListView):
 
     def post(self, request, *args, **kwargs):
         try:
-            products = [product.to_json() for product in Product.objects.all()]
-            return JsonResponse({'data': products})
+            containers = [container.to_json() for container in Container.objects.all()]
+            return JsonResponse({'data': containers})
         except Exception as e:
-            print("Error en vista ProductListView:", e)
+            print("Error en vista ContainerListView:", e)
             return JsonResponse({'error': str(e)}, status=500)
-
-# View to create a new product
-class ProductCreateView(SuccessMessageMixin, CreateView):
-    model = Product
-    form_class = ProductForm
-    template_name = 'products/product_form.html'
-    success_url = reverse_lazy('products:product_list')
-    success_message = "Product created successfully"
-
-
-# View to update an existing product
-class ProductUpdateView(SuccessMessageMixin, UpdateView):
-    model = Product
-    form_class = ProductForm
-    template_name = 'products/product_form.html'
-    success_url = reverse_lazy('products:product_list')
-    success_message = "Product updated successfully"
-
-
-# View to delete a product
-class ProductDeleteView(SuccessMessageMixin, DeleteView):
-    model = Product
-    template_name = 'products/product_confirm_delete.html'
-    success_url = reverse_lazy('products:product_list')
-    success_message = "Product deleted successfully"
-
-
-# View to list containers
-class ContainerListView(SuccessMessageMixin, ListView):
-    model = Container
-    template_name = 'products/container_list.html'
-    context_object_name = 'containers'
-
 
 # View to create a new container
 class ContainerCreateView(CreateView):
     model = Container
     form_class = ContainerForm
-    template_name = 'products/container_form.html'
+    template_name = 'containers/container_form.html'
     success_url = reverse_lazy('products:container_list')
     success_message = "Container created successfully"
 
@@ -96,7 +63,7 @@ class ContainerCreateView(CreateView):
 class ContainerUpdateView(SuccessMessageMixin, UpdateView):
     model = Container
     form_class = ContainerForm
-    template_name = 'products/container_form.html'
+    template_name = 'containers/container_form.html'
     success_url = reverse_lazy('products:container_list')
     success_message = "Container updated successfully"
 
@@ -104,6 +71,6 @@ class ContainerUpdateView(SuccessMessageMixin, UpdateView):
 # View to delete a container
 class ContainerDeleteView(SuccessMessageMixin, DeleteView):
     model = Container
-    template_name = 'products/container_confirm_delete.html'
+    template_name = 'containers/container_confirm_delete.html'
     success_url = reverse_lazy('products:container_list')
     success_message = "Container deleted successfully"

@@ -1,0 +1,85 @@
+{% extends 'list.html' %}
+{% load static %}
+
+{% block title %}Listado de Envases{% endblock %}
+
+{% block table_headers %}
+    <th>ID</th>
+    <th>Nombre</th>
+    <th>Peso</th>
+    <th>Fecha de Creación</th>
+    <th>Acciones</th>
+{% endblock %}
+
+{% block table_body %}
+<!-- Se llenará automáticamente con AJAX -->
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable({
+            processing: true,
+            serverSide: false,  // Usa true si implementas paginación en servidor
+            ajax: {
+                url: "{% url 'products:container_list' %}",
+                type: "POST",
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                dataSrc: "data",  // Mapea la respuesta de AJAX al formato esperado
+                error: function(xhr, error, thrown) {
+                    console.log("Error en AJAX: ", xhr.responseText);
+                }
+            },
+            columns: [
+                { data: "id" },  // Columna para el nombre del contenedor
+                { data: "name" },  // Columna para el nombre del contenedor
+                { 
+                    data: "weight", 
+                    render: function(data) {
+                        return data + " g";  // Formatea el peso con "g" al final
+                    }
+                },
+                { 
+                    data: "created_at", 
+                    render: function(data) {
+                        return new Date(data).toLocaleString();  // Formatea la fecha en formato legible
+                    }
+                },
+                { 
+                    data: "id", 
+                    render: function(data, type, row) {
+                        const edit_url = "{% url 'products:container_update' '0' %}".replace('0', data);
+                        const delete_url = "{% url 'products:container_delete' '0' %}".replace('0', data);
+                        return `
+                            <a href="${edit_url}" class="btn btn-warning btn-sm">Editar</a>
+                            <a href="${delete_url}" class="btn btn-danger btn-sm">Eliminar</a>
+                        `;
+                    }, 
+                    orderable: false, 
+                    searchable: false 
+                }
+            ],
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+            }
+        });
+    });
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+{% endblock %}
