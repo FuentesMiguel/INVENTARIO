@@ -1,9 +1,11 @@
 from django.urls import path
-from .views import product_views, containers_views
+from .views import product_views, containers_views, views
 
 app_name = 'products'
 
 urlpatterns = [
+    path('', views.HomeView.as_view(), name='home'),  # Página principal (Dashboard)
+
     path('product/', product_views.ProductListView.as_view(), name='product_list'),
     path('product/new/', product_views.ProductCreateView.as_view(), name='product_create'),
     path('product/<int:pk>/edit/', product_views.ProductUpdateView.as_view(), name='product_update'),

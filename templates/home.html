@@ -1,0 +1,71 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="main-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Panel Principal</h2>
+        <div class="datetime">
+            <span id="current-date"></span> - <span id="current-time"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card card-home shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Registrar Producto</h5>
+                    <p class="card-text">Agrega nuevos productos al inventario.</p>
+                    <a href="{% url 'products:product_create' %}" class="btn btn-success">Nuevo Producto</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card card-home shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Registrar Envase</h5>
+                    <p class="card-text">Crea nuevos tipos de envases.</p>
+                    <a href="{% url 'products:container_create' %}" class="btn btn-success">Nuevo Envase</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card card-home shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Ver Productos</h5>
+                    <p class="card-text">Consulta y gestiona los productos existentes.</p>
+                    <a href="{% url 'products:product_list' %}" class="btn btn-outline-success">Listado</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card card-home shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Ver Envases</h5>
+                    <p class="card-text">Consulta y edita los tipos de envases.</p>
+                    <a href="{% url 'products:container_list' %}" class="btn btn-outline-success">Listado</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateDateTime() {
+        const now = new Date();
+        const date = now.toLocaleDateString('es-VE', {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
+        const time = now.toLocaleTimeString('es-VE');
+        document.getElementById('current-date').innerText = date;
+        document.getElementById('current-time').innerText = time;
+    }
+
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+</script>
+{% endblock %}
