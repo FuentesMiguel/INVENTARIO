@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sistema de Inventario{% endblock %}</title>
+
+    <!-- Bootstrap 5.3.5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7"
+          crossorigin="anonymous">
+
+    <!-- DataTables Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+
+    {% block extra_css %}{% endblock %}
+
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+            background-color: #f8f9fa;
+        }
+        /* Navbar fixed-top */
+        .navbar {
+            z-index: 1030;
+        }
+        /* Sidebar styles */
+        .sidebar {
+            background-color: #198754;
+            color: white;
+            padding: 1rem;
+            height: calc(100vh - 56px);
+            overflow-y: auto;
+        }
+        .sidebar a {
+            color: white;
+            display: block;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+        }
+        .sidebar a:hover {
+            background-color: #157347;
+        }
+        .btn-guardar {
+            margin-top: 1rem;
+            width: 100%;
+        }
+        /* Content area */
+        .content {
+            flex: 1;
+            padding: 1rem;
+            margin-top: 56px;
+        }
+        @media (min-width: 992px) {
+            .content {
+                margin-left: 240px;
+            }
+        }
+        .card-home {
+            transition: transform 0.2s ease;
+        }
+        .card-home:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .datetime {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #198754;
+        }
+        footer {
+            background: #f1f1f1;
+            padding: 1rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Inventario</a>
+            <!-- Toggle sidebar for small screens -->
+            <button class="btn btn-success me-2 d-lg-none" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#sidebarMenu"
+                    aria-controls="sidebarMenu" aria-expanded="false"
+                    aria-label="Toggle sidebar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'products:home' %}">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'products:product_list' %}">Productos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'products:container_list' %}">Contenedores</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled text-white" aria-disabled="true">Deshabilitado</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar for large screens -->
+    <div class="d-none d-lg-block position-fixed top-56" style="width:220px;">
+        <div class="sidebar">
+            <h4 class="mb-4">Inventario</h4>
+            <a href="{% url 'products:product_list' %}">🛒 Productos</a>
+            <a href="{% url 'products:container_list' %}">📦 Contenedores</a>
+            <a href="#">⚙️ Administración</a>
+            <button type="button" class="btn btn-light btn-guardar">💾 Guardar</button>
+        </div>
+    </div>
+
+    <!-- Sidebar collapse for small screens -->
+    <div class="collapse d-lg-none" id="sidebarMenu">
+        <div class="sidebar">
+            <h4 class="mb-4">Inventario</h4>
+            <a href="{% url 'products:product_list' %}">🛒Productos</a>
+            <a href="{% url 'products:container_list' %}">📦 Contenedores</a>
+            <a href="#">⚙️ Administración</a>
+            <button type="button" class="btn btn-light btn-guardar">💾 Guardar</button>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; {{ now.year }} Mi Sistema de Inventario</p>
+        <div class="datetime">
+            <span id="current-date"></span> | <span id="current-time"></span>
+        </div>
+    </footer>
+
+    <!-- Date & Time Script -->
+    <script>
+        function updateDateTime() {
+            const now = new Date();
+            const date = now.toLocaleDateString('es-VE', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+            });
+            const time = now.toLocaleTimeString('es-VE');
+            document.getElementById('current-date').innerText = date;
+            document.getElementById('current-time').innerText = time;
+        }
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+    </script>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+            crossorigin="anonymous"></script>
+
+    <!-- jQuery + DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

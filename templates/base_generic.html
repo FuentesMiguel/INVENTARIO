@@ -1,153 +1,178 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <title>{% block title %}Dashboard{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Sistema de Inventario{% endblock %}</title>
 
+    <!-- Fuentes -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css">
+
+    <!-- Plugins -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css">
+    
     <!-- Bootstrap 5.3.5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7"
-          crossorigin="anonymous">
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7"
+    crossorigin="anonymous">
+    
     <!-- DataTables Bootstrap 5 CSS -->
-    <link rel="stylesheet"
-          href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 
+    <!-- Estilos AdminLTE -->
+    <link rel="stylesheet" href="{% static 'dist/css/adminlte.css' %}">
+    
     {% block extra_css %}{% endblock %}
-
-    <style>
-        body {
-            display: flex;
-            min-height: 100vh;
-            flex-direction: column;
-            background-color: #f8f9fa;
-        }
-        /* Navbar fixed-top */
-        .navbar {
-            z-index: 1030;
-        }
-        /* Sidebar styles */
-        .sidebar {
-            background-color: #198754;
-            color: white;
-            padding: 1rem;
-            height: calc(100vh - 56px);
-            overflow-y: auto;
-        }
-        .sidebar a {
-            color: white;
-            display: block;
-            padding: 0.75rem 1rem;
-            margin-bottom: 0.5rem;
-            border-radius: 0.5rem;
-            text-decoration: none;
-        }
-        .sidebar a:hover {
-            background-color: #157347;
-        }
-        .btn-guardar {
-            margin-top: 1rem;
-            width: 100%;
-        }
-        /* Content area */
-        .content {
-            flex: 1;
-            padding: 1rem;
-            margin-top: 56px;
-        }
-        @media (min-width: 992px) {
-            .content {
-                margin-left: 240px;
-            }
-        }
-        .card-home {
-            transition: transform 0.2s ease;
-        }
-        .card-home:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        .datetime {
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: #198754;
-        }
-        footer {
-            background: #f1f1f1;
-            padding: 1rem;
-            text-align: center;
-        }
-    </style>
 </head>
-<body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Inventario</a>
-            <!-- Toggle sidebar for small screens -->
-            <button class="btn btn-success me-2 d-lg-none" type="button"
-                    data-bs-toggle="collapse" data-bs-target="#sidebarMenu"
-                    aria-controls="sidebarMenu" aria-expanded="false"
-                    aria-label="Toggle sidebar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            
+<body class="layout-fixed sidebar-expand-lg sidebar-mini sidebar-collapse bg-body-tertiary">
+<div class="app-wrapper">
 
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'products:home' %}">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'products:product_list' %}">Productos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'products:container_list' %}">Contenedores</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled text-white" aria-disabled="true">Deshabilitado</a>
-                    </li>
-                </ul>
-            </div>
+    <!-- Navbar -->
+    <nav class="app-header navbar navbar-expand bg-body">
+        <div class="container-fluid">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+                        <i class="bi bi-list"></i>
+                    </a>
+                </li>
+                <li class="nav-item"><a href="{% url 'products:home' %}" class="nav-link">Inicio</a></li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                {% if request.user.is_authenticated %}
+                <li class="nav-item dropdown user-menu">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                        <img src="{% static 'dist/assets/img/user2-160x160.jpg' %}" class="user-image rounded-circle" alt="User">
+                        <span class="d-none d-md-inline">{{ request.user.username }}</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+                        <li class="user-footer">
+                            <a href="{% url 'profile' %}" class="btn btn-default btn-flat">Perfil</a>
+                            <a href="{% url 'logout' %}" class="btn btn-default btn-flat float-end">Salir</a>
+                        </li>
+                    </ul>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Iniciar Sesión</a>
+                </li>
+                {% endif %}
+            </ul>
         </div>
     </nav>
 
-    <!-- Sidebar for large screens -->
-    <div class="d-none d-lg-block position-fixed top-56" style="width:220px;">
-        <div class="sidebar">
-            <h4 class="mb-4">Inventario</h4>
-            <a href="{% url 'products:product_list' %}">🛒 Productos</a>
-            <a href="{% url 'products:container_list' %}">📦 Contenedores</a>
-            <a href="#">⚙️ Administración</a>
-            <button type="button" class="btn btn-light btn-guardar">💾 Guardar</button>
+    <!-- Sidebar -->
+    <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+        <div class="sidebar-brand">
+            <a href="{% url 'products:home' %}" class="brand-link">
+                <img src="{% static 'dist/assets/img/AdminLTELogo.png' %}" alt="Logo" class="brand-image opacity-75 shadow">
+                <span class="brand-text fw-light">AdminLTE 4</span>
+            </a>
         </div>
-    </div>
-
-    <!-- Sidebar collapse for small screens -->
-    <div class="collapse d-lg-none" id="sidebarMenu">
-        <div class="sidebar">
-            <h4 class="mb-4">Inventario</h4>
-            <a href="{% url 'products:product_list' %}">🛒Productos</a>
-            <a href="{% url 'products:container_list' %}">📦 Contenedores</a>
-            <a href="#">⚙️ Administración</a>
-            <button type="button" class="btn btn-light btn-guardar">💾 Guardar</button>
+        <div class="sidebar-wrapper">
+            <nav class="mt-2">
+                <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon bi bi-speedometer"></i>
+                            <p>Dashboard</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                          <i class="nav-icon bi bi-box-seam-fill"></i>
+                          <p>
+                            Productos
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                          </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                          <li class="nav-item">
+                            <a href="{% url 'products:product_list' %}" class="nav-link">
+                              <i class="nav-icon bi bi-circle"></i>
+                              <p>Listados</p>
+                            </a>
+                          </li>
+                          <li class="nav-item">
+                            <a href="{% url 'products:product_create' %}" class="nav-link">
+                              <i class="nav-icon bi bi-circle"></i>
+                              <p>Nuevos</p>
+                            </a>
+                          </li>
+                          <li class="nav-item">
+                            <a href="#" class="nav-link">
+                              <i class="nav-icon bi bi-circle"></i>
+                              <p>Inventarios</p>
+                            </a>
+                          </li>
+                        </ul>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                              <i class="nav-icon bi bi-tree-fill"></i>
+                              <p>
+                                Envases
+                                <i class="nav-arrow bi bi-chevron-right"></i>
+                              </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                              <li class="nav-item">
+                                <a href="{% url 'products:container_list' %}" class="nav-link">
+                                  <i class="nav-icon bi bi-circle"></i>
+                                  <p>Listados</p>
+                                </a>
+                              </li>
+                              <li class="nav-item">
+                                <a href="{% url 'products:container_create' %}" class="nav-link">
+                                  <i class="nav-icon bi bi-circle"></i>
+                                  <p>Nuevos</p>
+                                </a>
+                              </li>
+                              <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                  <i class="nav-icon bi bi-circle"></i>
+                                  <p>Inventario</p>
+                                </a>
+                              </li>
+                            </ul>
+                          </li>
+                      </li>
+                    <!-- Agrega más enlaces según tus vistas -->
+                </ul>
+            </nav>
         </div>
-    </div>
+    </aside>
 
-    <!-- Main content -->
-    <div class="content">
-        {% block content %}{% endblock %}
-    </div>
+    <!-- Main Content -->
+    <main class="app-main">
+        <div class="app-content-header">
+            <div class="container-fluid">
+                <h3>
+                    {% block header_title %}
+                    
+                    {% endblock %}
+                </h3>
+            </div>
+        </div>
+        <div class="app-content">
+            <div class="container-fluid">
+                {% block content %}
+                <!-- Contenido dinámico -->
+                {% endblock %}
+            </div>
+        </div>
+    </main>
 
     <!-- Footer -->
-    <footer>
-        <p>&copy; {{ now.year }} Mi Sistema de Inventario</p>
+    <footer class="app-footer">
+        <div class="float-end d-none d-sm-inline"> <p>&copy; {{ now.year }} Mi Sistema de Inventario</p></div>
         <div class="datetime">
-            <span id="current-date"></span> | <span id="current-time"></span>
+            <span id="current-date"></span> | <span id="current-time"></span><strong>Tu Empresa</strong> Todos los derechos reservados.
         </div>
+ 
     </footer>
+
+</div>
 
     <!-- Date & Time Script -->
     <script>
@@ -164,16 +189,37 @@
         updateDateTime();
     </script>
 
+
     <!-- Bootstrap Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
-            crossorigin="anonymous"></script>
+    integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+    crossorigin="anonymous"></script>
 
     <!-- jQuery + DataTables JS -->
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
-    {% block extra_js %}{% endblock %}
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+    <script src="{% static 'dist/js/adminlte.js' %}"></script>
+    <script>
+        const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
+        document.addEventListener('DOMContentLoaded', function () {
+            const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
+            if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
+                OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+                    scrollbars: {
+                        theme: 'os-theme-light',
+                        autoHide: 'leave',
+                        clickScroll: true,
+                    },
+                });
+            }
+        });
+    </script>
+{% block extra_js %}{% endblock %}
 </body>
 </html>
