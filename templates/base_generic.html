@@ -81,62 +81,92 @@
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">
-                          <i class="nav-icon bi bi-box-seam-fill"></i>
-                          <p>
-                            Productos
-                            <i class="nav-arrow bi bi-chevron-right"></i>
-                          </p>
+                            <i class="nav-icon bi bi-box-seam-fill"></i>
+                            <p>Productos
+                                <i class="nav-arrow bi bi-chevron-right"></i>
+                            </p>
                         </a>
                         <ul class="nav nav-treeview">
-                          <li class="nav-item">
+                            <li class="nav-item">
                             <a href="{% url 'products:product_list' %}" class="nav-link">
-                              <i class="nav-icon bi bi-circle"></i>
-                              <p>Listados</p>
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Listados</p>
                             </a>
-                          </li>
-                          <li class="nav-item">
+                            </li>
+                            <li class="nav-item">
                             <a href="{% url 'products:product_create' %}" class="nav-link">
-                              <i class="nav-icon bi bi-circle"></i>
-                              <p>Nuevos</p>
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Nuevos</p>
                             </a>
-                          </li>
-                          <li class="nav-item">
+                            </li>
+                            <li class="nav-item">
                             <a href="#" class="nav-link">
-                              <i class="nav-icon bi bi-circle"></i>
-                              <p>Inventarios</p>
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Inventarios</p>
                             </a>
-                          </li>
+                            </li>
                         </ul>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                              <i class="nav-icon bi bi-tree-fill"></i>
-                              <p>
-                                Envases
-                                <i class="nav-arrow bi bi-chevron-right"></i>
-                              </p>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon bi bi-tree-fill"></i>
+                            <p>
+                            Envases
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                            <a href="{% url 'products:container_list' %}" class="nav-link">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Listados</p>
                             </a>
-                            <ul class="nav nav-treeview">
-                              <li class="nav-item">
-                                <a href="{% url 'products:container_list' %}" class="nav-link">
-                                  <i class="nav-icon bi bi-circle"></i>
-                                  <p>Listados</p>
-                                </a>
-                              </li>
-                              <li class="nav-item">
-                                <a href="{% url 'products:container_create' %}" class="nav-link">
-                                  <i class="nav-icon bi bi-circle"></i>
-                                  <p>Nuevos</p>
-                                </a>
-                              </li>
-                              <li class="nav-item">
+                            </li>
+                            <li class="nav-item">
+                            <a href="{% url 'products:container_create' %}" class="nav-link">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Nuevos</p>
+                            </a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="#" class="nav-link">
-                                  <i class="nav-icon bi bi-circle"></i>
-                                  <p>Inventario</p>
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Inventario</p>
                                 </a>
-                              </li>
-                            </ul>
-                          </li>
-                      </li>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon bi bi-receipt"></i>
+                            <p>
+                            Ordeness
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                            <a href="{% url 'products:order_list' %}" class="nav-link">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Listados</p>
+                            </a>
+                            </li>
+                            <li class="nav-item">
+                            <a href="{% url 'products:order_create' %}" class="nav-link">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Nuevos</p>
+                            </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Inventario</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                     <!-- Agrega más enlaces según tus vistas -->
                 </ul>
             </nav>

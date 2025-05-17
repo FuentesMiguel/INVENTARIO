@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import product_views, containers_views, views
+from .views import order_views, product_views, containers_views, views
 
 app_name = 'products'
 
@@ -15,4 +15,9 @@ urlpatterns = [
     path('container/new/', containers_views.ContainerCreateView.as_view(), name='container_create'),
     path('container/<int:pk>/edit/', containers_views.ContainerUpdateView.as_view(), name='container_update'),
     path('container/<int:pk>/delete/', containers_views.ContainerDeleteView.as_view(), name='container_delete'),
+
+    path('orders/', order_views.OrderListView.as_view(), name='order_list'),
+    path('orders/new/', order_views.OrderCreateView.as_view(), name='order_create'),
+    path('orders/<int:pk>/edit/', order_views.OrderUpdateView.as_view(), name='order_update'),
+    path('orders/<int:pk>/delete/', order_views.OrderDeleteView.as_view(), name='order_delete'),
 ]

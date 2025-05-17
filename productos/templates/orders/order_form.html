@@ -1,0 +1,49 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}Order Form{% endblock %}
+
+{% block content %}
+  <h2>{% if form.instance.pk %}Edit Order{% else %}New Order{% endif %}</h2>
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+    
+    <!-- Order main form -->
+    <div class="card mb-4">
+      <div class="card-header">Customer Info</div>
+      <div class="card-body">
+        {{ form.non_field_errors }}
+        {{ form.customer_name.label_tag }} {{ form.customer_name }}
+        {{ form.phone_number.label_tag }} {{ form.phone_number }}
+        {{ form.table.label_tag }} {{ form.table }}
+        {{ form.mode.label_tag }} {{ form.mode }}
+        {{ form.paid.label_tag }} {{ form.paid }}
+        {{ form.payment_method.label_tag }} {{ form.payment_method }}
+        {{ form.notes.label_tag }} {{ form.notes }}
+      </div>
+    </div>
+
+    <!-- Order details formset -->
+    <div class="card mb-4">
+      <div class="card-header">Order Items</div>
+      <div class="card-body">
+        {{ formset.management_form }}
+        {% for subform in formset %}
+          <div class="border p-3 mb-3 rounded bg-light">
+            {{ subform.non_field_errors }}
+            {{ subform.product_type.label_tag }} {{ subform.product_type }}
+            {{ subform.description.label_tag }} {{ subform.description }}
+            {{ subform.quantity.label_tag }} {{ subform.quantity }}
+            {{ subform.extra_notes.label_tag }} {{ subform.extra_notes }}
+            {% if subform.instance.pk %}
+              {{ subform.DELETE.label_tag }} {{ subform.DELETE }}
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">Save Order</button>
+    <a href="{% url 'products:order_list' %}" class="btn btn-danger">Back to Order List</a>
+  </form>
+{% endblock %}
