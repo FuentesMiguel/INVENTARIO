@@ -1,8 +1,8 @@
 # orders/views.py
 from django.db import IntegrityError
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.http import JsonResponse, HttpResponseNotAllowed
 from django.urls import reverse_lazy, reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
@@ -113,16 +113,18 @@ class OrderUpdateView(SuccessMessageMixin, UpdateView):
         return self.render_to_response(context)
 
 
-# Delete Order (with AJAX + modal)
 class OrderDeleteView(SuccessMessageMixin, DeleteView):
     model = Order
-    template_name = 'orders/order_confirm_delete.html'
     success_url = reverse_lazy('products:order_list')
     success_message = "Order deleted successfully"
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.delete()
-        if request.is_ajax():
+
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             return JsonResponse({'message': self.success_message})
-        return super().delete(request, *args, **kwargs)
+        return redirect(self.success_url)
+
+    def post(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
